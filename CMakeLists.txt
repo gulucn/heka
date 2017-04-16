@@ -69,13 +69,23 @@ if (NOT SPHINX_BUILD_EXECUTABLE)
     set(INCLUDE_DOCUMENTATION false)
 endif()
 
+if (CMAKE_BUILD_TYPE)
+    string(TOLOWER ${CMAKE_BUILD_TYPE} lower_CMAKE_BUILD_TYPE)
+    if(lower_CMAKE_BUILD_TYPE MATCHES "debug")
+        message("CMAKE_BUILD_TYPE MATCHES debug ok")
+        set(LDFLAGS "-gcflags=\"-N" "-l\"")
+    endif()
+endif()
+
 set(LUA_SHARED_LIBRARY_SUFFIX ${CMAKE_SHARED_LIBRARY_SUFFIX})
 if (MINGW)
     set(ADDRESS_MODEL 64)
     if (GO_ARCH STREQUAL "386")
         set(ADDRESS_MODEL 32)
     endif()
-    set(LDFLAGS "-ldflags=\"-s\"")
+    if (NOT LDFLAGS)
+        set(LDFLAGS "-ldflags=\"-s\"")
+    endif()
     set(CGO_LDFLAGS "cgo LDFLAGS: ${LUA_LIB_PATH}/libluasandbox.dll ${LUA_LIB_PATH}/libluasb.dll -lm")
     set(CPACK_GENERATOR "ZIP")
 elseif(APPLE)
@@ -85,7 +95,9 @@ elseif(APPLE)
     set(LUA_SHARED_LIBRARY_SUFFIX ".so")
 elseif(UNIX)
     set(CPACK_GENERATOR "TGZ")
-    set(LDFLAGS "-ldflags=\"-s\"")
+    if (NOT LDFLAGS)
+        set(LDFLAGS "-ldflags=\"-s\"")
+    endif()
     if(NOT CMAKE_SYSTEM_NAME MATCHES "FreeBSD")
         set(LINK_DL "-ldl")
     endif()
@@ -160,7 +172,7 @@ DEPENDS ${SANDBOX_PACKAGE} GoPackages ${MESSAGE_PROTO_OUT}
 )
 
 add_custom_target(message_matcher_parser ALL
-COMMAND ${GO_EXECUTABLE} tool yacc -l=false -o=message_matcher_parser.go message_matcher_parser.y
+COMMAND $ENV{GOBIN}/yacc -l=false -o=message_matcher_parser.go message_matcher_parser.y
 DEPENDS heka_source
 WORKING_DIRECTORY "${HEKA_PATH}/message"
 )

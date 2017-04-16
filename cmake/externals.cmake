@@ -150,6 +150,8 @@ function(add_external_plugin vcs url tag)
     set(PLUGIN_LOADER ${PLUGIN_LOADER} ${_packages} PARENT_SCOPE)
 endfunction(add_external_plugin)
 
+execute_process(COMMAND "${GO_EXECUTABLE}" install "${CMAKE_SOURCE_DIR}/goyacc/yacc.go")
+
 git_clone(https://github.com/rafrombrc/gomock c922279faf77f29ce5781e96eb0711837fcb477c)
 add_custom_command(TARGET gomock POST_BUILD
 COMMAND ${GO_EXECUTABLE} install github.com/rafrombrc/gomock/mockgen)
