@@ -58,5 +58,7 @@ git_clone https://github.com/crankycoder/g2s 2594f7a035ed881bb10618bc5dc4440ef35
 git_clone https://github.com/getsentry/raven-go 0cc1491d9d27b258a9b4f0238908cb0d51bd6c9b
 git_clone https://github.com/pborman/uuid ca53cad383cad2479bbba7f7a1a05797ec1386e4
 git_clone https://github.com/gogo/protobuf 7d21ffbc76b992157ec7057b69a1529735fbab21
+git_clone https://github.com/mozilla-services/heka-mozsvc-plugins 77f9b7ae9089e2bfa8f11d2250802860a9f9a1ab
+git_clone https://github.com/rafrombrc/sarama f742e1e20b15b31320e0b6ff2f995bc5f0482fed
 
 

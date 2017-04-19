@@ -121,6 +121,20 @@ function(local_clone url)
     add_dependencies(GoPackages ${name})
 endfunction(local_clone)
 
+function(local_clone_to_path url dest_path)
+    parse_url(${url})
+    externalproject_add(
+        ${name}
+	URL ${CMAKE_SOURCE_DIR}/externals/${name}
+        SOURCE_DIR "${PROJECT_PATH}/src/${dest_path}"
+        BUILD_COMMAND ""
+        CONFIGURE_COMMAND ""
+        INSTALL_COMMAND ""
+        UPDATE_ALWAYS true
+    )
+    add_dependencies(GoPackages ${name})
+endfunction(local_clone_to_path)
+
 function(add_external_plugin vcs url tag)
     parse_url(${url})
     if  ("${tag}" STREQUAL ":local")
@@ -169,7 +183,7 @@ local_clone(https://github.com/cactus/gostrftime)
 local_clone(https://github.com/golang/snappy)
 local_clone(https://github.com/eapache/go-resiliency)
 local_clone(https://github.com/eapache/queue)
-git_clone_to_path(https://github.com/rafrombrc/sarama f742e1e20b15b31320e0b6ff2f995bc5f0482fed github.com/Shopify/sarama)
+local_clone_to_path(https://github.com/rafrombrc/sarama github.com/Shopify/sarama)
 local_clone(https://github.com/davecgh/go-spew)
 
 add_dependencies(sarama snappy)
@@ -191,7 +205,7 @@ if (INCLUDE_MOZSVC)
     local_clone(https://github.com/feyeleanor/sets)
     add_dependencies(sets slices)
     local_clone(https://github.com/crankycoder/g2s)
-    add_external_plugin(git https://github.com/mozilla-services/heka-mozsvc-plugins 77f9b7ae9089e2bfa8f11d2250802860a9f9a1ab)
+    add_external_plugin(git https://github.com/mozilla-services/heka-mozsvc-plugins :local)
     local_clone(https://github.com/getsentry/raven-go)
     add_dependencies(heka-mozsvc-plugins raven-go)
 endif()
